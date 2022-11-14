@@ -12,15 +12,12 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.getSystemService
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.debuggers.mapsar.databinding.ActivityMapsBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.CameraPosition
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -32,6 +29,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var currentLocation: Location
+    private lateinit var pos: CameraPosition
 
     private lateinit var mapFragment: SupportMapFragment
 
@@ -48,6 +46,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        val view = mapFragment.view
+        view?.isClickable = false
 
 
         sensorManager = getSystemService()!!
@@ -71,7 +71,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         getCurrentLocation {
-            val pos = CameraPosition.fromLatLngZoom(it.latLng, 13f)
+            pos = CameraPosition.fromLatLngZoom(it.latLng, 13f)
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos))
         }
 
